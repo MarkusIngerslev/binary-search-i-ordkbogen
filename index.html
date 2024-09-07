@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+        <!-- Links -->
+        <link rel="icon" href="#" />
+        <link rel="stylesheet" href="style.css" />
+
+        <title>Search in dictionary</title>
+    </head>
+    <body>
+        <main>
+            <h1>Søg i den danske ordbog</h1>
+
+            <div class="search-container">
+                <input type="text" name="seach-input" id="search-input" />
+                <button id="search-button">Søg</button>
+            </div>
+            <div>
+                <p>
+                    <!-- område til at holde request mængde og tid -->
+                    Server request: x - totalt time: unknown
+                </p>
+            </div>
+
+            <h2>Fundet</h2>
+
+            <!-- Kunne ikke finde ordet i ordbogen -->
+            <p>Kunne ikke finde noget i ordbogen på: 'søgt ord'</p>
+
+            <!-- Tænkt som måde hvorpå modtaget ord skal fremvises på. -->
+            <ul>
+                <li>Bøjningsform</li>
+                <ul>
+                    <li>opvaskemaskiner</li>
+                </ul>
+
+                <li>Opslagsord</li>
+                <ul>
+                    <li>opvaskemaskine</li>
+                </ul>
+
+                <li>Homograf nr.</li>
+                <ul>
+                    <li></li>
+                </ul>
+
+                <li>Ordklasse</li>
+                <ul>
+                    <li>sb.</li>
+                </ul>
+
+                <li>id</li>
+                <ul>
+                    <li>11037853</li>
+                </ul>
+            </ul>
+        </main>
+
+        <script type="module" src="script.js"></script>
+    </body>
+</html>
