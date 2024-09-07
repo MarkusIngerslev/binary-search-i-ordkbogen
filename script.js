@@ -13,12 +13,12 @@ function start() {
     getSizes().then((data) => {
         min = data.min;
         max = data.max;
-        console.log(min, max);
+        // console.log(min, max);
     });
 
     document.querySelector("#search-button").addEventListener("click", async () => {
         const search = document.querySelector("#search-input").value;
-        console.log(search);
+        // console.log(search);
         await binarySearch(search);
     });
 }
@@ -41,19 +41,23 @@ async function binarySearch(search) {
     let right = max;
     let iterations = 0;
     const startTime = performance.now(); // Start tidtagning
+    cleanUp();
 
     while (min <= right) {
         let middle = Math.floor((left + right) / 2);
         iterations++;
+        document.querySelector(
+            "#search-attempts"
+        ).textContent = `Server requests: ${iterations} - totalt time: unknown`;
 
         const entry = await getEntryAt(middle);
-        console.log(entry);
+        // console.log(entry);
 
         const comp = search.localeCompare(entry.inflected);
 
         if (comp === 0) {
-            //displayResult(entry, iterations, startTime);
-            console.log(entry, iterations, startTime);
+            displayResult(entry, iterations, startTime);
+            // console.log(entry, iterations, startTime);
             return;
         } else if (comp > 0) {
             left = middle + 1;
@@ -63,14 +67,14 @@ async function binarySearch(search) {
 
         // Hvis left bliver større end right, betyder det, at ordet ikke findes.
         if (left > right) {
-            console.log("Ordet blev ikke fundet efter " + iterations + " iterationer.");
+            // console.log("Ordet blev ikke fundet efter " + iterations + " iterationer.");
             displayNotFound(search, iterations, startTime);
             return;
         }
     }
 
     // Hvis vi når hertil, er ordet ikke fundet
-    console.log("Ordet blev ikke fundet.");
+    // console.log("Ordet blev ikke fundet.");
     displayNotFound(search, iterations, startTime);
 }
 
@@ -78,10 +82,59 @@ async function binarySearch(search) {
 function displayNotFound(search, iterations, startTime) {
     const endTime = performance.now();
     const timeTaken = endTime - startTime;
-    console.log(`Ordet '${search}' blev ikke fundet efter ${iterations} iterationer på ${timeTaken.toFixed(2)} ms.`);
-    // Eventuel kode til at vise en fejlbesked på siden kan tilføjes her
+    // console.log(`Ordet '${search}' blev ikke fundet efter ${iterations} iterationer på ${timeTaken.toFixed(2)} ms.`);
+
+    document.querySelector(
+        "#search-attempts"
+    ).textContent = `Server requests: ${iterations} - totalt tim: ${timeTaken.toFixed(2)} ms`;
+
+    document.querySelector("#search-title").textContent = "ikke fudnet";
+    document.querySelector(
+        "#search-word-not-found"
+    ).textContent = `Ordet '${search}' blev ikke fundet efter ${iterations}`;
 }
 
 function displayResult(entry, iterations, startTime) {
-    console.log();
+    const endTime = performance.now();
+    const timeTaken = endTime - startTime;
+
+    // console.log(`Ordet '${entry.inflected}' blev fundet efter ${iterations} iterationer på ${timeTaken.toFixed(2)} ms.`);
+
+    document.querySelector(
+        "#search-attempts"
+    ).textContent = `Server requests: ${iterations} - totalt time: ${timeTaken.toFixed(2)} ms`;
+
+    const html = /*html */ `
+        <li>Bøjningsform</li>
+        <ul>
+            <li>${entry.inflected}</li>    
+        </ul>
+
+        <li>Opslagsord</li>
+        <ul>
+            <li>${entry.headword}</li>
+        </ul>
+        
+        <li>Homograf nr.</li>
+        <ul>
+            <li>${entry.homograph || "N/A"}</li>
+        </ul>
+        
+        <li>Ordklasse</li>
+        <ul>
+            <li>${entry.partofspeech}</li>
+        </ul>
+        
+        <li>id</li>
+        <ul>
+            <li>${entry.id}</li>
+        </ul>
+    `;
+    document.querySelector("#search-result").innerHTML = html;
+}
+
+function cleanUp() {
+    document.querySelector("#search-title").textContent = "";
+    document.querySelector("#search-word-not-found").textContent = "";
+    document.querySelector("#search-result").textContent = "";
 }
